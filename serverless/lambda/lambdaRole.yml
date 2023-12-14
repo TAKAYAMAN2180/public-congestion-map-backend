@@ -1,0 +1,46 @@
+# Lambdaの実行権限を定義→LambdaのためのDynamoDBの権限を定義
+LambdaControllerRole:
+  Type: 'AWS::IAM::Role'
+  Properties:
+    Path: /
+    Description: "This iam able to run lambda function"
+    RoleName: ${self:service}-${self:provider.stage}-role-lambdacontroller
+    AssumeRolePolicyDocument:
+      Version: "2012-10-17"
+      Statement:
+        - Effect: "Allow"
+          Principal:
+            Service:
+              - "lambda.amazonaws.com"
+          Action:
+            - "sts:AssumeRole"
+    Policies:
+      - PolicyName: ${self:service}-${self:provider.stage}-role-lambdacontroller-policy
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+            # Lambdaの設定
+            - Effect: "Allow"
+              Action:
+                - 'lambda:InvokeFunction'
+              Resource: '*'
+
+            # DynamoDBの設定
+            - Effect: "Allow"
+              Action:
+                - 'dynamodb:DescribeStream'
+                - 'dynamodb:Query'
+                - 'dynamodb:BatchWriteItem'
+                - 'dynamodb:GetItem'
+                - 'dynamodb:DeleteItem'
+                - 'dynamodb:PutItem'
+                - 'dynamodb:Scan'
+                - 'dynamodb:UpdateItem'
+              Resource: '*'
+
+            # ログの設定
+            - Effect: "Allow"
+              Action:
+                - 'logs:PutLogEvents'
+                - 'logs:CreateLogStream'
+              Resource: '*'

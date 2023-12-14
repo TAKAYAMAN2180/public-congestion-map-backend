@@ -1,0 +1,24 @@
+appSync:
+  name: ${self:service}-${self:provider.stage}-appsync
+  authentication:
+    type: 'AMAZON_COGNITO_USER_POOLS'
+    config:
+      userPoolId: ${env:USER_POOL_ID}
+  additionalAuthentications:
+    - type: API_KEY
+  apiKeys:
+    - name: vercelApiKey
+      description: API Key for Vercel
+      expiresAfter: 365d
+  schema: ./serverless/appsync/schema.graphql
+  dataSources:
+    defaultDataSource:
+      type: 'AWS_LAMBDA'
+      config:
+        functionName: defaultHandler
+        role: !GetAtt AppSyncLambdaRole.Arn
+  resolvers:
+    ${file(./serverless/appsync/resolvers.yml):resolvers}
+  logging:
+    loggingRoleArn: !GetAtt AppSyncLogRole.Arn
+    level: ERROR # Logging Level: NONE | ERROR

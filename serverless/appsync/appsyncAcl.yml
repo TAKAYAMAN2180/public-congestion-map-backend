@@ -1,0 +1,58 @@
+AppSyncACL:
+  Type: AWS::WAFv2::WebACL
+  Properties:
+    Name: ${self:service}-${self:provider.stage}-appsync-waf-webacl
+    Scope: REGIONAL
+    DefaultAction:
+      Allow: { }
+    VisibilityConfig:
+      SampledRequestsEnabled: true
+      CloudWatchMetricsEnabled: true
+      MetricName: ${self:service}-${self:provider.stage}-appsync-waf-webacl
+    Rules:
+      - Name: AWSManagedRulesCommonRuleSet
+        Priority: 1
+        Statement:
+          ManagedRuleGroupStatement:
+            VendorName: AWS
+            Name: AWSManagedRulesCommonRuleSet
+            ExcludedRules: [ ]
+        OverrideAction:
+          None: { }
+        VisibilityConfig:
+          SampledRequestsEnabled: true
+          CloudWatchMetricsEnabled: true
+          MetricName: ${self:service}-${self:provider.stage}-appsync-waf-webacl
+      - Name: AWSManagedRulesAmazonIpReputationList
+        Priority: 2
+        Statement:
+          ManagedRuleGroupStatement:
+            VendorName: AWS
+            Name: AWSManagedRulesAmazonIpReputationList
+            ExcludedRules: [ ]
+        OverrideAction:
+          None: { }
+        VisibilityConfig:
+          SampledRequestsEnabled: true
+          CloudWatchMetricsEnabled: true
+          MetricName: ${self:service}-${self:provider.stage}-appsync-waf-webacl
+      - Name: AWSManagedRulesKnownBadInputsRuleSet
+        Priority: 3
+        Statement:
+          ManagedRuleGroupStatement:
+            VendorName: AWS
+            Name: AWSManagedRulesKnownBadInputsRuleSet
+            ExcludedRules: [ ]
+        OverrideAction:
+          None: { }
+        VisibilityConfig:
+          SampledRequestsEnabled: true
+          CloudWatchMetricsEnabled: true
+          MetricName: ${self:service}-${self:provider.stage}-appsync-waf-webacl
+
+AppSyncACLAssociation:
+  Type: AWS::WAFv2::WebACLAssociation
+  Properties:
+    ResourceArn: !GetAtt GraphQlApi.Arn
+    WebACLArn: !GetAtt AppSyncACL.Arn
+  DependsOn : AppSyncACL

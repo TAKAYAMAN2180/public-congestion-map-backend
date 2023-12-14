@@ -1,0 +1,721 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "The AWS CloudFormation template for this Serverless application",
+  "Resources": {
+    "ServerlessDeploymentBucket": {
+      "Type": "AWS::S3::Bucket",
+      "Properties": {
+        "BucketEncryption": {
+          "ServerSideEncryptionConfiguration": [
+            {
+              "ServerSideEncryptionByDefault": {
+                "SSEAlgorithm": "AES256"
+              }
+            }
+          ]
+        }
+      }
+    },
+    "ServerlessDeploymentBucketPolicy": {
+      "Type": "AWS::S3::BucketPolicy",
+      "Properties": {
+        "Bucket": {
+          "Ref": "ServerlessDeploymentBucket"
+        },
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": "s3:*",
+              "Effect": "Deny",
+              "Principal": "*",
+              "Resource": [
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":s3:::",
+                      {
+                        "Ref": "ServerlessDeploymentBucket"
+                      },
+                      "/*"
+                    ]
+                  ]
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":s3:::",
+                      {
+                        "Ref": "ServerlessDeploymentBucket"
+                      }
+                    ]
+                  ]
+                }
+              ],
+              "Condition": {
+                "Bool": {
+                  "aws:SecureTransport": false
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "DefaultHandlerLogGroup": {
+      "Type": "AWS::Logs::LogGroup",
+      "Properties": {
+        "LogGroupName": "/aws/lambda/congestion-map-backend-serverless-prod-defaultHandler"
+      }
+    },
+    "DefaultHandlerLambdaFunction": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Ref": "ServerlessDeploymentBucket"
+          },
+          "S3Key": "serverless/congestion-map-backend-serverless/prod/1700916529903-2023-11-25T12:48:49.903Z/congestion-map-backend-serverless.zip"
+        },
+        "Handler": "src/gateway/handler.handler",
+        "Runtime": "nodejs18.x",
+        "FunctionName": "congestion-map-backend-serverless-prod-defaultHandler",
+        "MemorySize": 1024,
+        "Timeout": 10,
+        "Description": "Default Handler",
+        "Environment": {
+          "Variables": {
+            "STAGE": "prod",
+            "REGION": "ap-northeast-1",
+            "TABLE_NAME": "congestion-map-backend-serverless-prod-dynamodb-master-table",
+            "USER_POOL_ID": "ap-northeast-1_dFv4kQKNb",
+            "VERIFICATION_SALT": "school-festival-bkc"
+          }
+        },
+        "Role": {
+          "Fn::GetAtt": [
+            "LambdaControllerRole",
+            "Arn"
+          ]
+        }
+      },
+      "DependsOn": [
+        "DefaultHandlerLogGroup",
+        "LambdaControllerRole"
+      ]
+    },
+    "DefaultHandlerLambdaVersiongaOZWmjfUfbR6yDuHThrFKLvj4SMzc6frpADbwZWcX4": {
+      "Type": "AWS::Lambda::Version",
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "DefaultHandlerLambdaFunction"
+        },
+        "CodeSha256": "hW1Hwkeb6RWyjzSCMYBOZAeEnvanRdlIjFKGKxPBCgY=",
+        "Description": "Default Handler"
+      }
+    },
+    "CongestionMapMasterTable": {
+      "Type": "AWS::DynamoDB::Table",
+      "Properties": {
+        "TableName": "congestion-map-backend-serverless-prod-dynamodb-master-table",
+        "AttributeDefinitions": [
+          {
+            "AttributeName": "PK",
+            "AttributeType": "S"
+          },
+          {
+            "AttributeName": "SK",
+            "AttributeType": "N"
+          }
+        ],
+        "KeySchema": [
+          {
+            "AttributeName": "PK",
+            "KeyType": "HASH"
+          },
+          {
+            "AttributeName": "SK",
+            "KeyType": "RANGE"
+          }
+        ],
+        "BillingMode": "PAY_PER_REQUEST",
+        "PointInTimeRecoverySpecification": {
+          "PointInTimeRecoveryEnabled": true
+        }
+      }
+    },
+    "AppSyncLambdaRole": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "Path": "/",
+        "Description": "This is appsync role to run lambda function",
+        "RoleName": "congestion-map-backend-serverless-prod-role-appsynclambda",
+        "AssumeRolePolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Principal": {
+                "Service": [
+                  "lambda.amazonaws.com"
+                ]
+              },
+              "Action": [
+                "sts:AssumeRole"
+              ]
+            }
+          ]
+        },
+        "Policies": [
+          {
+            "PolicyName": "congestion-map-backend-serverless-prod-role-appsynclambda-policy",
+            "PolicyDocument": {
+              "Version": "2012-10-17",
+              "Statement": {
+                "Effect": "Allow",
+                "Action": [
+                  "lambda:invokeFunction"
+                ],
+                "Resource": [
+                  "*"
+                ]
+              }
+            }
+          }
+        ]
+      }
+    },
+    "AppSyncDynamoRole": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "Path": "/",
+        "Description": "This is appsync role to use DynamoDB",
+        "RoleName": "congestion-map-backend-serverless-prod-role-appsyncdynamo",
+        "AssumeRolePolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Principal": {
+                "Service": [
+                  "appsync.amazonaws.com"
+                ]
+              },
+              "Action": [
+                "sts:AssumeRole"
+              ]
+            }
+          ]
+        },
+        "Policies": [
+          {
+            "PolicyName": "congestion-map-backend-serverless-prod-role-appsynclambda-policy",
+            "PolicyDocument": {
+              "Version": "2012-10-17",
+              "Statement": [
+                {
+                  "Effect": "Allow",
+                  "Action": [
+                    "dynamodb:Query",
+                    "dynamodb:GetItem"
+                  ],
+                  "Resource": "*"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "LambdaControllerRole": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "Path": "/",
+        "Description": "This iam able to run lambda function",
+        "RoleName": "congestion-map-backend-serverless-prod-role-lambdacontroller",
+        "AssumeRolePolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Principal": {
+                "Service": [
+                  "lambda.amazonaws.com"
+                ]
+              },
+              "Action": [
+                "sts:AssumeRole"
+              ]
+            }
+          ]
+        },
+        "Policies": [
+          {
+            "PolicyName": "congestion-map-backend-serverless-prod-role-lambdacontroller-policy",
+            "PolicyDocument": {
+              "Version": "2012-10-17",
+              "Statement": [
+                {
+                  "Effect": "Allow",
+                  "Action": [
+                    "lambda:InvokeFunction"
+                  ],
+                  "Resource": "*"
+                },
+                {
+                  "Effect": "Allow",
+                  "Action": [
+                    "dynamodb:DescribeStream",
+                    "dynamodb:Query",
+                    "dynamodb:BatchWriteItem",
+                    "dynamodb:GetItem",
+                    "dynamodb:DeleteItem",
+                    "dynamodb:PutItem",
+                    "dynamodb:Scan",
+                    "dynamodb:UpdateItem"
+                  ],
+                  "Resource": "*"
+                },
+                {
+                  "Effect": "Allow",
+                  "Action": [
+                    "logs:PutLogEvents",
+                    "logs:CreateLogStream"
+                  ],
+                  "Resource": "*"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "AppSyncACL": {
+      "Type": "AWS::WAFv2::WebACL",
+      "Properties": {
+        "Name": "congestion-map-backend-serverless-prod-appsync-waf-webacl",
+        "Scope": "REGIONAL",
+        "DefaultAction": {
+          "Allow": {}
+        },
+        "VisibilityConfig": {
+          "SampledRequestsEnabled": true,
+          "CloudWatchMetricsEnabled": true,
+          "MetricName": "congestion-map-backend-serverless-prod-appsync-waf-webacl"
+        },
+        "Rules": [
+          {
+            "Name": "AWSManagedRulesCommonRuleSet",
+            "Priority": 1,
+            "Statement": {
+              "ManagedRuleGroupStatement": {
+                "VendorName": "AWS",
+                "Name": "AWSManagedRulesCommonRuleSet",
+                "ExcludedRules": []
+              }
+            },
+            "OverrideAction": {
+              "None": {}
+            },
+            "VisibilityConfig": {
+              "SampledRequestsEnabled": true,
+              "CloudWatchMetricsEnabled": true,
+              "MetricName": "congestion-map-backend-serverless-prod-appsync-waf-webacl"
+            }
+          },
+          {
+            "Name": "AWSManagedRulesAmazonIpReputationList",
+            "Priority": 2,
+            "Statement": {
+              "ManagedRuleGroupStatement": {
+                "VendorName": "AWS",
+                "Name": "AWSManagedRulesAmazonIpReputationList",
+                "ExcludedRules": []
+              }
+            },
+            "OverrideAction": {
+              "None": {}
+            },
+            "VisibilityConfig": {
+              "SampledRequestsEnabled": true,
+              "CloudWatchMetricsEnabled": true,
+              "MetricName": "congestion-map-backend-serverless-prod-appsync-waf-webacl"
+            }
+          },
+          {
+            "Name": "AWSManagedRulesKnownBadInputsRuleSet",
+            "Priority": 3,
+            "Statement": {
+              "ManagedRuleGroupStatement": {
+                "VendorName": "AWS",
+                "Name": "AWSManagedRulesKnownBadInputsRuleSet",
+                "ExcludedRules": []
+              }
+            },
+            "OverrideAction": {
+              "None": {}
+            },
+            "VisibilityConfig": {
+              "SampledRequestsEnabled": true,
+              "CloudWatchMetricsEnabled": true,
+              "MetricName": "congestion-map-backend-serverless-prod-appsync-waf-webacl"
+            }
+          }
+        ]
+      }
+    },
+    "AppSyncACLAssociation": {
+      "Type": "AWS::WAFv2::WebACLAssociation",
+      "Properties": {
+        "ResourceArn": {
+          "Fn::GetAtt": [
+            "GraphQlApi",
+            "Arn"
+          ]
+        },
+        "WebACLArn": {
+          "Fn::GetAtt": [
+            "AppSyncACL",
+            "Arn"
+          ]
+        }
+      },
+      "DependsOn": [
+        "AppSyncACL"
+      ]
+    },
+    "GraphQlApi": {
+      "Type": "AWS::AppSync::GraphQLApi",
+      "Properties": {
+        "Name": "congestion-map-backend-serverless-prod-appsync",
+        "XrayEnabled": false,
+        "AuthenticationType": "AMAZON_COGNITO_USER_POOLS",
+        "UserPoolConfig": {
+          "AwsRegion": {
+            "Fn::Sub": "${AWS::Region}"
+          },
+          "UserPoolId": "ap-northeast-1_dFv4kQKNb",
+          "DefaultAction": "ALLOW"
+        },
+        "AdditionalAuthenticationProviders": [
+          {
+            "AuthenticationType": "API_KEY"
+          }
+        ],
+        "LogConfig": {
+          "CloudWatchLogsRoleArn": {
+            "Fn::GetAtt": [
+              "GraphQlApiLogGroupRole",
+              "Arn"
+            ]
+          },
+          "FieldLogLevel": "ERROR"
+        }
+      }
+    },
+    "GraphQlSchema": {
+      "Type": "AWS::AppSync::GraphQLSchema",
+      "Properties": {
+        "Definition": "# noinspection GraphQLUnresolvedReference,GraphQLMissingType\n# \"@aws_cognito_user_pools\"→ 事業部用のCognito User Pool\n# \"@aws_api_key\" → Vercel用のAPIキー認証\n# \"@aws_lambda\" → 出店団体用のLambda認証\nschema {\n    query: Query\n    mutation: Mutation\n}\n\ntype Congestion @aws_api_key @aws_cognito_user_pools {\n    areaNum: Int!\n    congestionLevel: Int!\n    updatedAt: Int!\n}\n\ntype Mutation {\n    updateCongestionByAreaNum(input: CongestionInput!): Congestion @aws_cognito_user_pools\n    updateCongestionByAreaNumWithStoreHash(input: CongestionInput!, storeHash: String!): Congestion @aws_cognito_user_pools\n}\n\ntype Query {\n    fetchAllCongestions: [Congestion]! @aws_api_key @aws_cognito_user_pools\n    fetchCongestionByAreaNum(areaNum: Int!): Congestion @aws_cognito_user_pools @aws_api_key\n}\n\ninput CongestionInput {\n    areaNum: Int!\n    congestionLevel: Int!\n}",
+        "ApiId": {
+          "Fn::GetAtt": [
+            "GraphQlApi",
+            "ApiId"
+          ]
+        }
+      }
+    },
+    "GraphQlApiLogGroup": {
+      "Type": "AWS::Logs::LogGroup",
+      "Properties": {
+        "LogGroupName": {
+          "Fn::Join": [
+            "/",
+            [
+              "/aws/appsync/apis",
+              {
+                "Fn::GetAtt": [
+                  "GraphQlApi",
+                  "ApiId"
+                ]
+              }
+            ]
+          ]
+        }
+      }
+    },
+    "GraphQlApiLogGroupPolicy": {
+      "Type": "AWS::IAM::Policy",
+      "Properties": {
+        "PolicyName": "GraphQlApiLogGroupPolicy",
+        "Roles": [
+          {
+            "Ref": "GraphQlApiLogGroupRole"
+          }
+        ],
+        "PolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Action": [
+                "logs:CreateLogGroup",
+                "logs:CreateLogStream",
+                "logs:PutLogEvents"
+              ],
+              "Resource": [
+                {
+                  "Fn::GetAtt": [
+                    "GraphQlApiLogGroup",
+                    "Arn"
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "GraphQlApiLogGroupRole": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Principal": {
+                "Service": [
+                  "appsync.amazonaws.com"
+                ]
+              },
+              "Action": [
+                "sts:AssumeRole"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "GraphQlApivercelApiKey": {
+      "Type": "AWS::AppSync::ApiKey",
+      "Properties": {
+        "ApiId": {
+          "Fn::GetAtt": [
+            "GraphQlApi",
+            "ApiId"
+          ]
+        },
+        "Description": "API Key for Vercel",
+        "Expires": 1732449600
+      }
+    },
+    "GraphQlDsdefaultDataSource": {
+      "Type": "AWS::AppSync::DataSource",
+      "Properties": {
+        "ApiId": {
+          "Fn::GetAtt": [
+            "GraphQlApi",
+            "ApiId"
+          ]
+        },
+        "Name": "defaultDataSource",
+        "Type": "AWS_LAMBDA",
+        "LambdaConfig": {
+          "LambdaFunctionArn": {
+            "Fn::GetAtt": [
+              "DefaultHandlerLambdaFunction",
+              "Arn"
+            ]
+          }
+        },
+        "ServiceRoleArn": {
+          "Fn::GetAtt": [
+            "GraphQlDsdefaultDataSourceRole",
+            "Arn"
+          ]
+        }
+      }
+    },
+    "GraphQlDsdefaultDataSourceRole": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Principal": {
+                "Service": [
+                  "appsync.amazonaws.com"
+                ]
+              },
+              "Action": [
+                "sts:AssumeRole"
+              ]
+            }
+          ]
+        },
+        "Policies": [
+          {
+            "PolicyName": "AppSync-Datasource-defaultDataSource",
+            "PolicyDocument": {
+              "Version": "2012-10-17",
+              "Statement": [
+                {
+                  "Action": [
+                    "lambda:invokeFunction"
+                  ],
+                  "Effect": "Allow",
+                  "Resource": [
+                    {
+                      "Fn::GetAtt": [
+                        "DefaultHandlerLambdaFunction",
+                        "Arn"
+                      ]
+                    },
+                    {
+                      "Fn::Join": [
+                        ":",
+                        [
+                          {
+                            "Fn::GetAtt": [
+                              "DefaultHandlerLambdaFunction",
+                              "Arn"
+                            ]
+                          },
+                          "*"
+                        ]
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "GraphQlResolverQueryfetchAllCongestions": {
+      "Type": "AWS::AppSync::Resolver",
+      "DependsOn": [
+        "GraphQlSchema"
+      ],
+      "Properties": {
+        "ApiId": {
+          "Fn::GetAtt": [
+            "GraphQlApi",
+            "ApiId"
+          ]
+        },
+        "TypeName": "Query",
+        "FieldName": "fetchAllCongestions",
+        "Kind": "UNIT",
+        "DataSourceName": {
+          "Fn::GetAtt": [
+            "GraphQlDsdefaultDataSource",
+            "Name"
+          ]
+        }
+      }
+    },
+    "GraphQlResolverQueryfetchCongestionByAreaNum": {
+      "Type": "AWS::AppSync::Resolver",
+      "DependsOn": [
+        "GraphQlSchema"
+      ],
+      "Properties": {
+        "ApiId": {
+          "Fn::GetAtt": [
+            "GraphQlApi",
+            "ApiId"
+          ]
+        },
+        "TypeName": "Query",
+        "FieldName": "fetchCongestionByAreaNum",
+        "Kind": "UNIT",
+        "DataSourceName": {
+          "Fn::GetAtt": [
+            "GraphQlDsdefaultDataSource",
+            "Name"
+          ]
+        }
+      }
+    },
+    "GraphQlResolverMutationupdateCongestionByAreaNum": {
+      "Type": "AWS::AppSync::Resolver",
+      "DependsOn": [
+        "GraphQlSchema"
+      ],
+      "Properties": {
+        "ApiId": {
+          "Fn::GetAtt": [
+            "GraphQlApi",
+            "ApiId"
+          ]
+        },
+        "TypeName": "Mutation",
+        "FieldName": "updateCongestionByAreaNum",
+        "Kind": "UNIT",
+        "DataSourceName": {
+          "Fn::GetAtt": [
+            "GraphQlDsdefaultDataSource",
+            "Name"
+          ]
+        }
+      }
+    },
+    "GraphQlResolverMutationupdateCongestionByAreaNumWithStoreHash": {
+      "Type": "AWS::AppSync::Resolver",
+      "DependsOn": [
+        "GraphQlSchema"
+      ],
+      "Properties": {
+        "ApiId": {
+          "Fn::GetAtt": [
+            "GraphQlApi",
+            "ApiId"
+          ]
+        },
+        "TypeName": "Mutation",
+        "FieldName": "updateCongestionByAreaNumWithStoreHash",
+        "Kind": "UNIT",
+        "DataSourceName": {
+          "Fn::GetAtt": [
+            "GraphQlDsdefaultDataSource",
+            "Name"
+          ]
+        }
+      }
+    }
+  },
+  "Outputs": {
+    "ServerlessDeploymentBucketName": {
+      "Value": {
+        "Ref": "ServerlessDeploymentBucket"
+      },
+      "Export": {
+        "Name": "sls-congestion-map-backend-serverless-prod-ServerlessDeploymentBucketName"
+      }
+    },
+    "DefaultHandlerLambdaFunctionQualifiedArn": {
+      "Description": "Current Lambda function version",
+      "Value": {
+        "Ref": "DefaultHandlerLambdaVersiongaOZWmjfUfbR6yDuHThrFKLvj4SMzc6frpADbwZWcX4"
+      },
+      "Export": {
+        "Name": "sls-congestion-map-backend-serverless-prod-DefaultHandlerLambdaFunctionQualifiedArn"
+      }
+    }
+  }
+}

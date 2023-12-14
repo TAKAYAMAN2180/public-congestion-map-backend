@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "baseUrl": "./",
+    "module": "NodeNext", // デフォルトから変更
+    "moduleResolution": "NodeNext", // 追加
+    "target": "ESNext",
+    "forceConsistentCasingInFileNames": true,
+    "esModuleInterop": true,
+    "paths": {
+      "@/*": [
+        "src/*"
+      ]
+    }
+  }
+}

@@ -1,0 +1,366 @@
+[
+  {
+    "PK": "Store",
+    "SK": 1,
+    "congestionLevel": 0,
+    "createdAt": 1702173600,
+    "updatedAt": 1702173600
+  },
+  {
+    "PK": "Store",
+    "SK": 2,
+    "congestionLevel": 0,
+    "createdAt": 1702173600,
+    "updatedAt": 1702173600
+  },
+  {
+    "PK": "Store",
+    "SK": 3,
+    "congestionLevel": 0,
+    "createdAt": 1702173600,
+    "updatedAt": 1702173600
+  },
+  {
+    "PK": "Store",
+    "SK": 4,
+    "congestionLevel": 0,
+    "createdAt": 1702173600,
+    "updatedAt": 1702173600
+  },
+  {
+    "PK": "Store",
+    "SK": 5,
+    "congestionLevel": 0,
+    "createdAt": 1702173600,
+    "updatedAt": 1702173600
+  },
+  {
+    "PK": "Store",
+    "SK": 6,
+    "congestionLevel": 0,
+    "createdAt": 1702173600,
+    "updatedAt": 1702173600
+  },
+  {
+    "PK": "Store",
+    "SK": 7,
+    "congestionLevel": 0,
+    "createdAt": 1702173600,
+    "updatedAt": 1702173600
+  },
+  {
+    "PK": "Store",
+    "SK": 8,
+    "congestionLevel": 0,
+    "createdAt": 1702173600,
+    "updatedAt": 1702173600
+  },
+  {
+    "PK": "Store",
+    "SK": 9,
+    "congestionLevel": 0,
+    "createdAt": 1702173600,
+    "updatedAt": 1702173600
+  },
+  {
+    "PK": "Store",
+    "SK": 10,
+    "congestionLevel": 0,
+    "createdAt": 1702173600,
+    "updatedAt": 1702173600
+  },
+  {
+    "PK": "Store",
+    "SK": 11,
+    "congestionLevel": 0,
+    "createdAt": 1702173600,
+    "updatedAt": 1702173600
+  },
+  {
+    "PK": "Store",
+    "SK": 12,
+    "congestionLevel": 0,
+    "createdAt": 1702173600,
+    "updatedAt": 1702173600
+  },
+  {
+    "PK": "Store",
+    "SK": 13,
+    "congestionLevel": 0,
+    "createdAt": 1702173600,
+    "updatedAt": 1702173600
+  },
+  {
+    "PK": "Store",
+    "SK": 14,
+    "congestionLevel": 0,
+    "createdAt": 1702173600,
+    "updatedAt": 1702173600
+  },
+  {
+    "PK": "Store",
+    "SK": 15,
+    "congestionLevel": 0,
+    "createdAt": 1702173600,
+    "updatedAt": 1702173600
+  },
+  {
+    "PK": "Store",
+    "SK": 16,
+    "congestionLevel": 0,
+    "createdAt": 1702173600,
+    "updatedAt": 1702173600
+  },
+  {
+    "PK": "Store",
+    "SK": 17,
+    "congestionLevel": 0,
+    "createdAt": 1702173600,
+    "updatedAt": 1702173600
+  },
+  {
+    "PK": "Store",
+    "SK": 18,
+    "congestionLevel": 0,
+    "createdAt": 1702173600,
+    "updatedAt": 1702173600
+  },
+  {
+    "PK": "Store",
+    "SK": 19,
+    "congestionLevel": 0,
+    "createdAt": 1702173600,
+    "updatedAt": 1702173600
+  },
+  {
+    "PK": "Store",
+    "SK": 20,
+    "congestionLevel": 0,
+    "createdAt": 1702173600,
+    "updatedAt": 1702173600
+  },
+  {
+    "PK": "Store",
+    "SK": 21,
+    "congestionLevel": 0,
+    "createdAt": 1702173600,
+    "updatedAt": 1702173600
+  },
+  {
+    "PK": "Store",
+    "SK": 22,
+    "congestionLevel": 0,
+    "createdAt": 1702173600,
+    "updatedAt": 1702173600
+  },
+  {
+    "PK": "Store",
+    "SK": 23,
+    "congestionLevel": 0,
+    "createdAt": 1702173600,
+    "updatedAt": 1702173600
+  },
+  {
+    "PK": "Store",
+    "SK": 24,
+    "congestionLevel": 0,
+    "createdAt": 1702173600,
+    "updatedAt": 1702173600
+  },
+  {
+    "PK": "Store",
+    "SK": 25,
+    "congestionLevel": 0,
+    "createdAt": 1702173600,
+    "updatedAt": 1702173600
+  },
+  {
+    "PK": "Store",
+    "SK": 26,
+    "congestionLevel": 0,
+    "createdAt": 1702173600,
+    "updatedAt": 1702173600
+  },
+  {
+    "PK": "Store",
+    "SK": 27,
+    "congestionLevel": 0,
+    "createdAt": 1702173600,
+    "updatedAt": 1702173600
+  },
+  {
+    "PK": "Store",
+    "SK": 28,
+    "congestionLevel": 0,
+    "createdAt": 1702173600,
+    "updatedAt": 1702173600
+  },
+  {
+    "PK": "Store",
+    "SK": 29,
+    "congestionLevel": 0,
+    "createdAt": 1702173600,
+    "updatedAt": 1702173600
+  },
+  {
+    "PK": "Store",
+    "SK": 30,
+    "congestionLevel": 0,
+    "createdAt": 1702173600,
+    "updatedAt": 1702173600
+  },
+  {
+    "PK": "Store",
+    "SK": 31,
+    "congestionLevel": 0,
+    "createdAt": 1702173600,
+    "updatedAt": 1702173600
+  },
+  {
+    "PK": "Store",
+    "SK": 32,
+    "congestionLevel": 0,
+    "createdAt": 1702173600,
+    "updatedAt": 1702173600
+  },
+  {
+    "PK": "Store",
+    "SK": 33,
+    "congestionLevel": 0,
+    "createdAt": 1702173600,
+    "updatedAt": 1702173600
+  },
+  {
+    "PK": "Store",
+    "SK": 34,
+    "congestionLevel": 0,
+    "createdAt": 1702173600,
+    "updatedAt": 1702173600
+  },
+  {
+    "PK": "Store",
+    "SK": 35,
+    "congestionLevel": 0,
+    "createdAt": 1702173600,
+    "updatedAt": 1702173600
+  },
+  {
+    "PK": "Store",
+    "SK": 36,
+    "congestionLevel": 0,
+    "createdAt": 1702173600,
+    "updatedAt": 1702173600
+  },
+  {
+    "PK": "Store",
+    "SK": 37,
+    "congestionLevel": 0,
+    "createdAt": 1702173600,
+    "updatedAt": 1702173600
+  },
+  {
+    "PK": "Store",
+    "SK": 38,
+    "congestionLevel": 0,
+    "createdAt": 1702173600,
+    "updatedAt": 1702173600
+  },
+  {
+    "PK": "Store",
+    "SK": 39,
+    "congestionLevel": 0,
+    "createdAt": 1702173600,
+    "updatedAt": 1702173600
+  },
+  {
+    "PK": "Store",
+    "SK": 40,
+    "congestionLevel": 0,
+    "createdAt": 1702173600,
+    "updatedAt": 1702173600
+  },
+  {
+    "PK": "Store",
+    "SK": 41,
+    "congestionLevel": 0,
+    "createdAt": 1702173600,
+    "updatedAt": 1702173600
+  },
+  {
+    "PK": "Store",
+    "SK": 42,
+    "congestionLevel": 0,
+    "createdAt": 1702173600,
+    "updatedAt": 1702173600
+  },
+  {
+    "PK": "Store",
+    "SK": 43,
+    "congestionLevel": 0,
+    "createdAt": 1702173600,
+    "updatedAt": 1702173600
+  },
+  {
+    "PK": "Store",
+    "SK": 44,
+    "congestionLevel": 0,
+    "createdAt": 1702173600,
+    "updatedAt": 1702173600
+  },
+  {
+    "PK": "Store",
+    "SK": 45,
+    "congestionLevel": 0,
+    "createdAt": 1702173600,
+    "updatedAt": 1702173600
+  },
+  {
+    "PK": "Store",
+    "SK": 46,
+    "congestionLevel": 0,
+    "createdAt": 1702173600,
+    "updatedAt": 1702173600
+  },
+  {
+    "PK": "Store",
+    "SK": 47,
+    "congestionLevel": 0,
+    "createdAt": 1702173600,
+    "updatedAt": 1702173600
+  },
+  {
+    "PK": "Store",
+    "SK": 48,
+    "congestionLevel": 0,
+    "createdAt": 1702173600,
+    "updatedAt": 1702173600
+  },
+  {
+    "PK": "Store",
+    "SK": 49,
+    "congestionLevel": 0,
+    "createdAt": 1702173600,
+    "updatedAt": 1702173600
+  },
+  {
+    "PK": "Store",
+    "SK": 50,
+    "congestionLevel": 0,
+    "createdAt": 1702173600,
+    "updatedAt": 1702173600
+  },
+  {
+    "PK": "Store",
+    "SK": 51,
+    "congestionLevel": 0,
+    "createdAt": 1702173600,
+    "updatedAt": 1702173600
+  },
+  {
+    "PK": "Store",
+    "SK": 52,
+    "congestionLevel": 0,
+    "createdAt": 1702173600,
+    "updatedAt": 1702173600
+  }
+]

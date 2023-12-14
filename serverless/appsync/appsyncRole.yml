@@ -1,0 +1,82 @@
+# Lambdaの実行権限 (ここはinvokeFunctionのみ。LambdaでDyanmoDBを動作させるときにはLambda側で権限定義)
+AppSyncLambdaRole:
+  Type: 'AWS::IAM::Role'
+  Properties:
+    Path: /
+    Description: "This is appsync role to run lambda function"
+    RoleName: ${self:service}-${self:provider.stage}-role-appsynclambda
+    AssumeRolePolicyDocument:
+      Version: "2012-10-17"
+      Statement:
+        - Effect: "Allow"
+          Principal:
+            Service:
+              - "lambda.amazonaws.com"
+          Action:
+            - "sts:AssumeRole"
+    Policies:
+      - PolicyName: ${self:service}-${self:provider.stage}-role-appsynclambda-policy
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+            Effect: "Allow"
+            Action:
+              - 'lambda:invokeFunction'
+            Resource:
+              - '*'
+
+# DynamoDB実行環境　(ここはdynamoDBのみ)
+AppSyncDynamoRole:
+  Type: 'AWS::IAM::Role'
+  Properties:
+    Path: /
+    Description: "This is appsync role to use DynamoDB"
+    RoleName: ${self:service}-${self:provider.stage}-role-appsyncdynamo
+    AssumeRolePolicyDocument:
+      Version: "2012-10-17"
+      Statement:
+        - Effect: "Allow"
+          Principal:
+            Service:
+              - "appsync.amazonaws.com"
+          Action:
+            - "sts:AssumeRole"
+    Policies:
+      - PolicyName: ${self:service}-${self:provider.stage}-role-appsynclambda-policy
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+            # DynamoDBの設定
+            - Effect: "Allow"
+              Action:
+                - 'dynamodb:Query'
+                - 'dynamodb:GetItem'
+              Resource: '*'
+
+# ログ
+AppSyncLogRole:
+  Type: 'AWS::IAM::Role'
+  Properties:
+    RoleName: ${self:service}-${self:provider.stage}-role-appsynclog
+    AssumeRolePolicyDocument:
+      Version: "2012-10-17"
+      Statement:
+        - Effect: "Allow"
+          Principal:
+            Service:
+              - "appsync.amazonaws.com"
+          Action:
+            - "sts:AssumeRole"
+    Policies:
+      - PolicyName: ${self:service}-${self:provider.stage}-role-appsynclambda-policy
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+            - Effect: "Allow"
+              Action:
+                - 'logs:CreateLogStream'
+                - 'logs:PutLogEvents'
+                - 'logs:PutLogGroup'
+              Resource:
+                - '*'
+

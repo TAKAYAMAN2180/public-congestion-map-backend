@@ -1,0 +1,6 @@
+functions:
+  defaultHandler:
+    handler: src/gateway/handler.handler
+    description: "Default Handler"
+    role: !GetAtt LambdaControllerRole.Arn
+    timeout: 10

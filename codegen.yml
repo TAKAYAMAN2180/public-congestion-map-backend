@@ -1,0 +1,18 @@
+# 常に上書き
+overwrite: true
+# スキーマファイルを指定
+# 今回のケースではAppSyncから出力
+schema: "./serverless/appsync/schema.graphql"
+generates:
+  # 型生成する型のパス
+  src/graphql.ts:
+    plugins:
+      - "typescript"
+      # Mutation,Queryの型を生成
+      - "typescript-operations"
+    config:
+      # __typenameフィールドの出力を抑制
+      # 例: `__typename?: 'Task';`
+      skipTypename: true
+      # Mutation,Queryのオプショナルを外す
+      avoidOptionals: true

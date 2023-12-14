@@ -1,0 +1,29 @@
+# noinspection GraphQLUnresolvedReference,GraphQLMissingType
+# "@aws_cognito_user_pools"→ 事業部用のCognito User Pool
+# "@aws_api_key" → Vercel用のAPIキー認証
+# "@aws_lambda" → 出店団体用のLambda認証
+schema {
+    query: Query
+    mutation: Mutation
+}
+
+type Congestion @aws_api_key @aws_cognito_user_pools {
+    areaNum: Int!
+    congestionLevel: Int!
+    updatedAt: Int!
+}
+
+type Mutation {
+    updateCongestionByAreaNum(input: CongestionInput!): Congestion @aws_cognito_user_pools
+    updateCongestionByAreaNumWithStoreHash(input: CongestionInput!, storeHash: String!): Congestion @aws_cognito_user_pools
+}
+
+type Query {
+    fetchAllCongestions: [Congestion]! @aws_api_key @aws_cognito_user_pools
+    fetchCongestionByAreaNum(areaNum: Int!): Congestion @aws_cognito_user_pools @aws_api_key
+}
+
+input CongestionInput {
+    areaNum: Int!
+    congestionLevel: Int!
+}

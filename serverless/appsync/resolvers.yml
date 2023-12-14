@@ -1,0 +1,16 @@
+resolvers:
+  ### Define Query Type ###
+  Query.fetchAllCongestions:
+    kind: UNIT
+    dataSource: defaultDataSource
+  Query.fetchCongestionByAreaNum:
+    kind: UNIT
+    dataSource: defaultDataSource
+
+  ### Define Mutation Type ###
+  Mutation.updateCongestionByAreaNum:
+    kind: UNIT
+    dataSource: defaultDataSource
+  Mutation.updateCongestionByAreaNumWithStoreHash:
+    kind: UNIT
+    dataSource: defaultDataSource

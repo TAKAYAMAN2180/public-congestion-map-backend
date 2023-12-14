@@ -1,0 +1,14 @@
+dynamodb:
+  stages:
+    - ${self:provider.stage}
+  start:
+    port: 8000
+    inMemory: true
+    migrate: true
+    seed: true
+    convertEmptyValues: true
+  seed:
+    development:
+      sources:
+        - table: ${self:service}-${self:provider.stage}-dynamodb-master-table
+          sources: [ ./serverless/dynamodb/seed.json ]

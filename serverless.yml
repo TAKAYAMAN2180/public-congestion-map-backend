@@ -1,0 +1,57 @@
+service: congestion-map-backend-serverless
+frameworkVersion: '3'
+useDotenv: true
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  stackTags: # タグ付けに利用
+    Application: ${self:service}
+    Stage: ${self:provider.stage}
+  stage: ${opt:stage, 'dev'} # 'opt:stage' はCLIオプションの '--stage' を参照し、指定されていなければ 'dev' がデフォルト
+  region: ap-northeast-1
+  iam:
+    role:
+      name: ${self:service}-${self:provider.stage}-role-logs
+      statements:
+        - Effect: Allow
+          Action:
+            - logs:CreateLogGroup
+            - logs:CreateLogStream
+            - logs:PutLogEvents
+          Resource:
+            - '*'
+  environment:
+    STAGE: ${self:provider.stage}
+    REGION: ${opt:region, self:provider.region}
+    TABLE_NAME: ${self:service}-${self:provider.stage}-dynamodb-master-table
+
+functions: ${file(./serverless/lambda/functions.yml):functions}
+
+# NOTICE:「serverless-dynamodb」を一番先頭に
+plugins:
+  - serverless-esbuild
+  - serverless-dotenv-plugin
+  - serverless-appsync-plugin
+  - serverless-dynamodb-seed
+
+
+custom:
+  esbuild: ${file(./serverless/lambda/esbuild.yml):esbuild}
+  seed:
+    initSeed:
+      table: ${self:provider.environment.TABLE_NAME}
+      sources:
+        - ./serverless/dynamodb/seed.json
+
+appSync:
+  ${file(./serverless/appsync/appsync.yml):appSync}
+
+resources:
+  Resources:
+    CongestionMapMasterTable: ${file(./serverless/dynamodb/table.yml):CongestionMapMasterTable}
+    AppSyncLambdaRole: ${file(./serverless/appsync/appsyncRole.yml):AppSyncLambdaRole}
+    AppSyncDynamoRole: ${file(./serverless/appsync/appsyncRole.yml):AppSyncDynamoRole}
+    LambdaControllerRole: ${file(./serverless/lambda/lambdaRole.yml):LambdaControllerRole}
+    AppSyncACL: ${file(./serverless/appsync/appsyncAcl.yml):AppSyncACL}
+    AppSyncACLAssociation: ${file(./serverless/appsync/appsyncAcl.yml):AppSyncACLAssociation}

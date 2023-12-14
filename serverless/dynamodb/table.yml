@@ -1,0 +1,17 @@
+CongestionMapMasterTable:
+  Type: AWS::DynamoDB::Table
+  Properties:
+    TableName: ${self:service}-${self:provider.stage}-dynamodb-master-table
+    AttributeDefinitions:
+      - AttributeName: PK
+        AttributeType: S
+      - AttributeName: SK
+        AttributeType: N
+    KeySchema:
+      - AttributeName: PK
+        KeyType: HASH
+      - AttributeName: SK
+        KeyType: RANGE
+    BillingMode: PAY_PER_REQUEST
+    PointInTimeRecoverySpecification: # ポイントインタイムリカバリを有効化
+      PointInTimeRecoveryEnabled: true

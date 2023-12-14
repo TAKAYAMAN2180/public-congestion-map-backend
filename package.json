@@ -1,0 +1,30 @@
+{
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.427.0",
+    "@aws-sdk/lib-dynamodb": "^3.427.0",
+    "@aws-sdk/util-dynamodb": "^3.427.0",
+    "aws-jwt-verify": "^4.0.0",
+    "graphql": "^16.8.1"
+  },
+  "devDependencies": {
+    "@graphql-codegen/cli": "^5.0.0",
+    "@graphql-codegen/typescript": "^4.0.1",
+    "@graphql-codegen/typescript-operations": "^4.0.1",
+    "@types/aws-lambda": "^8.10.126",
+    "aws-lambda": "^1.0.7",
+    "esbuild": "^0.19.4",
+    "serverless-appsync-plugin": "^2.5.2",
+    "serverless-dotenv-plugin": "^6.0.0",
+    "serverless-dynamodb-seed": "^0.3.0",
+    "serverless-esbuild": "^1.48.5",
+    "ts-node": "^10.9.1"
+  },
+  "scripts": {
+    "codegen": "graphql-codegen",
+    "deploy": "./deploy.sh $1",
+    "deploy-prod": "sls deploy --stage prod --aws-profile school-festical-account",
+    "init": "sls dynamodb:seed --stage $1"
+  },
+  "name": "convenience-time-backend-app",
+  "license": "UNLICENSED"
+}
